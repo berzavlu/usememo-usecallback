@@ -1,25 +1,52 @@
-import logo from './logo.svg';
+import { memo, useCallback, useState } from 'react';
 import './App.css';
 
 function App() {
+  const [count, setCount] = useState(0)
+  const [names, setNames] = useState([])
+
+  const actionMore = () => {
+    setCount((state) => {
+      return state + 1
+    })
+  }
+
+  const addName = () => {
+    setNames((state) => {
+      return [...state, 'luis']
+    })
+  }
+
+  const onChildIncrement = useCallback(() => {
+    actionMore()
+  }, [])
+
+  console.log('render app')
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      hola
+      <div>Counter {count}</div>
+      <button onClick={actionMore}>+</button>
+      <button onClick={addName}>Add name</button>
+      <List
+        names={names}
+        increment={onChildIncrement}
+      />
     </div>
   );
 }
+
+const List = memo((props) => {
+  console.log('Render: List', props)
+  return (
+    <div>
+      <ul>
+        hola
+        {props.names.map((name, i) => <li key={i}>{name}</li>)}
+      </ul>
+      <button onClick={props.increment}>child increment</button>
+    </div>
+  );
+});
 
 export default App;
